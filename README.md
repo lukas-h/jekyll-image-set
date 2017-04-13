@@ -1,59 +1,30 @@
-Jekyll Image Set
-================
+# Jekyll Image Set (with Thumbnails)
 
-Create an Image Gallery from a Folder
-----------------
+Create an Image Gallery from a Folder with Image Thumbnails  
+Based on [https://github.com/callmeed/jekyll-image-set](https://github.com/callmeed/jekyll-image-set)  
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-Takes a dir (generally a subdirectory of your images folder), gets all the images from it, and creates HTML image and container tags.
+## What? 
 
-Useful for creating an image gallery and the like.
+Takes a subdirectory of the `_uploads` (a collection used by sites made with [siteleaf](https://siteleaf.com)) folder, gets all the images from it, and creates HTML image and container tags **plus** thumbnails with 30% of the full dimensions.
 
-Installation
-----------------
+## Installation
 
 Place the image_set.rb file in the _plugins directory of your Jekyll site
 
-Usage 
-----------------
+Dependency
+add this line to your sites Gemfile: `gem "mini_magick"` (with the source: `source 'https://rubygems.org'`)
 
-**default**
+**not working with github pages**
 
-<code>{% image_set images/gallery1 %}</code>
+## Usage
 
-(this will create a ul container, then li and img tags for each image in images/gallery1)
+<code>{% image_set uploads/gallery1 %}</code>
 
-**with some options**
+(this will create a ul container, then li and img tags for each image in _uploads/gallery1)
 
-<code>{% image_set images/gallery2 --class=img-responsive --container-tag=div --wrap-tag=div %}</code>
+## Known Issues
 
-(this will set the class for the img tags and use div's for the container and wrap)
-
-What About the GIFs!?
-----------------
-Right now, it will match any .jpg or .png file in the path you specify. If you need to match other file types, edit the full_path var in the render method. 
-
-Available Options
-----------------
-
-<code>--class=some_class</code>
-sets the class for the img tags, default is 'image'
-
-<code>--wrap_tag=some_tag</code>
-sets the tag to wrap around each <img>, default is 'li'
-
-<code>--wrap_class=some_class</code>
-sets the class for wrap_tag, default is 'image-item'
-
-<code>--container_tag=some_tag</code>
-sets the tag to contain all img's, default is 'ul'
-
-<code>--container_class=some_class</code>
-sets the class for container_tag, default is 'image-set'
-
-Known Issues
-----------------
-
-* Cannot add multiple clasess to img tags or wrap/container tags.
-* No way to set ALT or other attributes for img tags. Need this for SEO probably. 
 * Tabs/indentation is crappy.
-
+* Images disappear when jekyll build process completes
+* Can only choose images from the `_uploads` collection
