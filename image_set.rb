@@ -4,14 +4,21 @@
 #
 require 'mini_magick'
 
+# ImageSet Liquid Plugin
+# by Erik Dungan
+# erik.dungan@gmail.com / @callmeed
+#
+
   class ImageSet < Liquid::Tag
     @path = nil
+
     @class = nil
 
     def initialize(tag_name, text, tokens)
       super
       
       @path = text.split(/\s+/)[0].strip
+
       @class = 'image'
 
     end
@@ -24,51 +31,25 @@ require 'mini_magick'
       files = Dir.glob(full_path).uniq.sort
 
       Dir.glob(files).each do |image|
-        file = Pathname.new(image).basename
+        check = image.end_with? ".thumb.jpg"
+        if check == false
+        file = Pathname.new(image).basename.to_s
         src = File.join('/', @path, file)
-
-        src2 = File.join('/uploads/', File.basename(image).sub(File.extname(image), "-thumb#{File.extname(image)}"))
-        puts "#{src2}"
-
+        src_thumb = File.join('/', @path, file + ".thumb.jpg")
         source += "<a class='image-item'>\n"
-        source += "<img src='#{src}' data-src='#{src2}' alt='gallery item' width='100%' class='responsive-img materialboxed lazyload'>\n"
+        source += "<img src='#{src}' alt='gallery item' width='100%' class='responsive-img materialboxed lazyload'>\n" +
+                  "<img src='#{src_thumb}' alt='gallery item' width='100%' class='responsive-img materialboxed lazyload'>\n"
         source += "</a>\n"
+        img = MiniMagick::Image.open(image)
+        img.resize "30%x30%"
+        img.write(image + ".thumb.jpg")
+        end
       end
+
       source += "</div>\n"
       source
     end
 
 Liquid::Template.register_tag 'image_set', self
-end
 
-
-class Bla < Jekyll::StaticFile
-  def write(dest)
-      super(dest) rescue ArgumentError
-      true
-    end
-end
-
-class ThumbnailGenerator < Jekyll::Generator
-    def generate(site)
-      full_path = File.join("_uploads", "**", "*.{png,jpg,jpeg,gif}")
-      puts "#{full_path}"
-
-      files = Dir.glob(full_path).uniq.sort
-      Dir.glob(files).each do |image|
-          x =File.basename(image).sub(File.extname(image), "-thumb#{File.extname(image)}")
-          puts "#{x}"
-          bla = Bla.new(site,site.dest, "uploads", x, site.collections['uploads'])
-          site.static_files << bla
-
-          thumb_path = site.dest + "/uploads/" + x
-          image = MiniMagick::Image.open(image)
-          image.strip
-          image.resize "30%x30%"
-          image.write thumb_path
-          if bla.path() == thumb_path
-            puts "yeah: #{thumb_path}"
-          end
-      end
-    end
 end
