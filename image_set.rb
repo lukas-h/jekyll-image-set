@@ -4,11 +4,6 @@
 #
 require 'mini_magick'
 
-# ImageSet Liquid Plugin
-# by Erik Dungan
-# erik.dungan@gmail.com / @callmeed
-#
-
   class ImageSet < Liquid::Tag
     @path = nil
 
